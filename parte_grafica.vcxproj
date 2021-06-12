@@ -151,15 +151,15 @@
   <ItemGroup>
     <Image Include="bitmap1.bmp" />
     <Image Include="bitmap2.bmp" />
-    <Image Include="C:\Users\Utilizador\Desktop\PngItem_811322.bmp" />
-    <Image Include="C:\Users\Utilizador\Downloads\bitmap_icon_28_KbE_icon (1).ico" />
-    <Image Include="C:\Users\Utilizador\Downloads\bitmap_icon_28_KbE_icon.ico" />
-    <Image Include="C:\Users\Utilizador\Downloads\Nova pasta\bitmap_icon_28_1XC_1.ico" />
-    <Image Include="C:\Users\Utilizador\Downloads\Nova pasta\bitmap_icon_28_1XC_12.ico" />
+    <Image Include="bitmap3.bmp" />
+    <Image Include="C:\Users\Utilizador\Downloads\clipart2465977 (1).ico" />
+    <Image Include="C:\Users\Utilizador\Downloads\clipart2465977.ico" />
+    <Image Include="clipart2465977.ico" />
     <Image Include="icon1.ico" />
+    <Image Include="PngItem_811322.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ribbon1.mfcribbon-ms" />
+    <None Include="modernaero.cur" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

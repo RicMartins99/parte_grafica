@@ -33,30 +33,30 @@
     <Image Include="bitmap1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="C:\Users\Utilizador\Downloads\Nova pasta\bitmap_icon_28_1XC_12.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="icon1.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="C:\Users\Utilizador\Downloads\Nova pasta\bitmap_icon_28_1XC_1.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="C:\Users\Utilizador\Downloads\bitmap_icon_28_KbE_icon.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="C:\Users\Utilizador\Downloads\bitmap_icon_28_KbE_icon (1).ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="bitmap2.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="C:\Users\Utilizador\Desktop\PngItem_811322.bmp">
+    <Image Include="C:\Users\Utilizador\Downloads\clipart2465977.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bitmap3.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="clipart2465977.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="PngItem_811322.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C:\Users\Utilizador\Downloads\clipart2465977 (1).ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ribbon1.mfcribbon-ms">
+    <None Include="modernaero.cur">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

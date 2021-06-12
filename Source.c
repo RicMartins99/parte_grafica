@@ -66,13 +66,13 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 	wcApp.style = CS_HREDRAW | CS_VREDRAW;  // Estilo da janela: Fazer o redraw se for
 											// modificada horizontal ou verticalmente
 
-	wcApp.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1));   // "hIcon" = handler do ícon normal
+	wcApp.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON2));   // "hIcon" = handler do ícon normal
 										   // "NULL" = Icon definido no Windows
 										   // "IDI_AP..." Ícone "aplicação"
 	wcApp.hIconSm = NULL;				 // "hIconSm" = handler do ícon pequeno
 										   // "NULL" = Icon definido no Windows
 										   // "IDI_INF..." Ícon de informação
-	wcApp.hCursor = LoadCursor(NULL, IDC_ARROW);	// "hCursor" = handler do cursor (rato) 
+	wcApp.hCursor = LoadCursor(hInst, MAKEINTRESOURCE(IDC_CURSOR1));	// "hCursor" = handler do cursor (rato) 
 							  // "NULL" = Forma definida no Windows
 							  // "IDC_ARROW" Aspecto "seta" 
 	wcApp.lpszMenuName = (TCHAR *)IDR_MENU1;			// Classe do menu que a janela pode ter
@@ -137,13 +137,16 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 
 	// NOTA: GetMessage() devolve 0 quando for recebida a mensagem de fecho da janela,
 	// 	  terminando então o loop de recepção de mensagens, e o programa 
+	HACCEL tabela = LoadAccelerators(hInst, MAKEINTRESOURCE(IDR_ACCELERATOR1));
 
 	while (GetMessage(&lpMsg, NULL, 0, 0)) {
-		TranslateMessage(&lpMsg);	// Pré-processamento da mensagem (p.e. obter código 
-					   // ASCII da tecla premida)
-		DispatchMessage(&lpMsg);	// Enviar a mensagem traduzida de volta ao Windows, que
-					   // aguarda até que a possa reenviar à função de 
-					   // tratamento da janela, CALLBACK TrataEventos (abaixo)
+		if (!TranslateAccelerator(hWnd, tabela, &lpMsg)) {
+			TranslateMessage(&lpMsg);	// Pré-processamento da mensagem (p.e. obter código 
+						   // ASCII da tecla premida)
+			DispatchMessage(&lpMsg);	// Enviar a mensagem traduzida de volta ao Windows, que
+						   // aguarda até que a possa reenviar à função de 
+						   // tratamento da janela, CALLBACK TrataEventos (abaixo)
+		}
 	}
 
 	// ============================================================================
@@ -179,7 +182,20 @@ BOOL CALLBACK TrataEventosCaixa(HWND h, UINT eve, WPARAM w, LPARAM l) {
 	case WM_CLOSE:
 		EndDialog(h, 0);
 
-		return TRUE;
+		break;
+
+	case WM_COMMAND:
+		if (LOWORD(w) == IDCLOSE || LOWORD(w) == IDCANCEL)
+		{
+			EndDialog(h, LOWORD(w));
+		}
+		break;
+
+		if (LOWORD(w) == IDOK)
+		{
+			
+		}
+
 	}
 	return FALSE;
 }
@@ -203,9 +219,9 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
 		bmp = LoadBitmap((HINSTANCE)GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
 
-		button_adiciona = CreateWindow(_T("BUTTON"), _T("Adiciona Aeroporto"), WS_VISIBLE | WS_CHILD | WS_BORDER, 20, 50, 200, 20, hWnd, (HMENU)1, NULL, NULL);
-		button_suspende= CreateWindow(_T("BUTTON"), _T("Aceita Novos Passageiros - Suspende"), WS_VISIBLE | WS_CHILD | WS_BORDER, 20, 100, 200, 20, hWnd, (HMENU)2, NULL, NULL);
-		button_ativa= CreateWindow(_T("BUTTON"), _T("Aceita Novos Passageiros - Ativa"), WS_VISIBLE | WS_CHILD | WS_BORDER, 20, 150, 200, 20, hWnd, (HMENU)3, NULL, NULL);
+		button_adiciona = CreateWindow(_T("BUTTON"), _T("Adiciona Aeroporto"), WS_VISIBLE | WS_CHILD | WS_BORDER, 20, 600, 200, 20, hWnd, (HMENU)1, NULL, NULL);
+		button_suspende= CreateWindow(_T("BUTTON"), _T("Aceita Novos Passageiros - Suspende"), WS_VISIBLE | WS_CHILD | WS_BORDER, 300, 600, 200, 20, hWnd, (HMENU)2, NULL, NULL);
+		button_ativa= CreateWindow(_T("BUTTON"), _T("Aceita Novos Passageiros - Ativa"), WS_VISIBLE | WS_CHILD | WS_BORDER, 600, 600, 200, 20, hWnd, (HMENU)3, NULL, NULL);
 
 
 		hdc = GetDC(hWnd);
@@ -292,6 +308,10 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
 		if (LOWORD(wParam == ID_SOBRE)) {
 			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG2), hWnd, TrataEventosCaixa);
+		}
+
+		if (LOWORD(wParam == ID_FICHEIRO_SAIR)) {
+			DestroyWindow(hWnd);
 		}
 		
 
