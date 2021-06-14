@@ -67,7 +67,7 @@ BEGIN
     POPUP "Ficheiro"
     BEGIN
         MENUITEM "Login",                       ID_FICHEIRO_LOGIN
-        MENUITEM "&Sair\tCtrl+F1",              ID_FICHEIRO_SAIR
+        MENUITEM "&Sair",                       ID_FICHEIRO_SAIR
     END
     MENUITEM "Opções",                      ID_OP40015
     MENUITEM "Sobre",                       ID_SOBRE
@@ -159,7 +159,7 @@ END
 // remains consistent on all systems.
 IDI_ICON2               ICON                    "clipart2465977.ico"
 
-IDI_ICON1               ICON                    "C:\\Users\\Utilizador\\Downloads\\clipart2465977 (1).ico"
+IDI_ICON1               ICON                    "clipart2465977(1).ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -5,9 +5,7 @@
 #include <wingdi.h>
 
 
-#define botao_adiciona 1
-#define botao_suspende 2
-#define botao_ativa 3
+
 /* ===================================================== */
 /* Programa base (esqueleto) para aplicações Windows     */
 /* ===================================================== */
@@ -27,8 +25,6 @@ LRESULT CALLBACK TrataEventos(HWND, UINT, WPARAM, LPARAM);
 // igual ao do próprio programa) "szprogName" é usado mais abaixo na definição das 
 // propriedades do objecto janela
 TCHAR szProgName[] = TEXT("Base");
-
-HWND button_adiciona, button_suspende,button_ativa;
 
 // ============================================================================
 // FUNÇÃO DE INÍCIO DO PROGRAMA: WinMain()
@@ -200,33 +196,62 @@ BOOL CALLBACK TrataEventosCaixa(HWND h, UINT eve, WPARAM w, LPARAM l) {
 	return FALSE;
 }
 
+DWORD WINAPI mexe(LPVOID lpParameter) {
+	move* m = (move*)lpParameter;
+	static int incremento = 10;
+	int valor = *m->x;
+	while (1) {
+		valor = valor + 10;
+
+		if (valor == 600 || valor == 0) {
+			incremento = incremento * -1;
+		}
+		m->x = &valor;
+		InvalidateRect(m->hWndaux, NULL, TRUE);
+		UpdateWindow(m->hWndaux);
+		Sleep(2000);
+
+	}
+	ExitThread(0);
+}
+
 
 LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam) {
 	HDC hdc, aux;
+	move info;
+	//info = (move*)malloc(sizeof(move));
+	//ZeroMemory(&info, sizeof(move));
 	static HDC ddc;
+	HANDLE thrmx;
     static TCHAR letra = ' ';
 	static int maxX, maxY;
-	 int x = 0, i;
-	 int altura = 600, largura = 600;
+	int x = 10;
+	static int altura = 600, largura = 600;
 	static TCHAR texto[100] =  TEXT("");
 	static HBITMAP bmp = NULL, foto = NULL;
 	PAINTSTRUCT paint;
 	int cmd_suspende1 = 1;
 	int cmd_ativa1 = 0;
+	RECT r;
+	info.hWndaux = hWnd;
+	info.x = &x;
 	switch (messg) {
 
 	case WM_CREATE:
 
+
+		//info.hWndaux = hWnd;
+		//info.x = &x;
+
+		
+
+		thrmx = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)mexe, &info, 0, NULL);
+
 		bmp = LoadBitmap((HINSTANCE)GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
-
-		button_adiciona = CreateWindow(_T("BUTTON"), _T("Adiciona Aeroporto"), WS_VISIBLE | WS_CHILD | WS_BORDER, 20, 600, 200, 20, hWnd, (HMENU)1, NULL, NULL);
-		button_suspende= CreateWindow(_T("BUTTON"), _T("Aceita Novos Passageiros - Suspende"), WS_VISIBLE | WS_CHILD | WS_BORDER, 300, 600, 200, 20, hWnd, (HMENU)2, NULL, NULL);
-		button_ativa= CreateWindow(_T("BUTTON"), _T("Aceita Novos Passageiros - Ativa"), WS_VISIBLE | WS_CHILD | WS_BORDER, 600, 600, 200, 20, hWnd, (HMENU)3, NULL, NULL);
-
 
 		hdc = GetDC(hWnd);
 		maxX = GetSystemMetrics(SM_CXSCREEN);
-		maxX = GetSystemMetrics(SM_CYSCREEN);
+		maxY = GetSystemMetrics(SM_CYSCREEN);
 
 		ddc = CreateCompatibleDC(hdc);
 
@@ -258,6 +283,17 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 			MessageBox(hWnd, TEXT("Backspace premido"), TEXT("Evento KEYDOWN"), MB_OK);
 
 		break;
+	case WM_SIZE:
+
+		GetWindowRect(hWnd, &r);
+
+		largura = r.right - r.left;
+
+		altura = r.bottom - r.top;
+
+		InvalidateRect(hWnd, NULL, TRUE);
+
+		break;
 /*
 	case WM_LBUTTONDOWN:
 		hdc = GetDC(hWnd);
@@ -280,39 +316,9 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 		EndPaint(hWnd, &paint);
 
 		break;*/
+	
 	case WM_COMMAND:
 
-		if (LOWORD(wParam) == botao_adiciona) {
-			//MessageBox(hWnd, _T("Tem a certeza?"), _T("Titulo"), MB_YESNO);
-			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG1), hWnd, TrataEventosCaixa);
-		}
-		if (LOWORD(wParam) == botao_suspende) {
-			
-			if (cmd_suspende1 == 1) { //esta ativo
-				MessageBox(hWnd, TEXT("ACEITA NOVOS PASSAGEIROS [SUSPENSO]"), TEXT("SUSPENDE"), MB_OK);
-			}
-			else
-				MessageBox(hWnd, TEXT("SUSPENDIDO ANTERIORMENTE [SUSPENSO]"), TEXT("SUSPENDE"), MB_OK);
-
-		}
-		
-		if(LOWORD(wParam) == botao_ativa){
-
-			if(cmd_ativa1==0){  //esta suspenso
-				MessageBox(hWnd, TEXT("ACEITA NOVOS AVIOES [ATIVO]"), TEXT("ATIVA"), MB_OK);
-			}
-			else
-				MessageBox(hWnd, TEXT("ACEITE ANTERIORMENTE [ATIVO]"), TEXT("ATIVA"), MB_OK);
-			
-		}
-
-		if (LOWORD(wParam == ID_SOBRE)) {
-			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG2), hWnd, TrataEventosCaixa);
-		}
-
-		if (LOWORD(wParam == ID_FICHEIRO_SAIR)) {
-			DestroyWindow(hWnd);
-		}
 		
 
 		break;
@@ -320,29 +326,33 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
 		hdc = BeginPaint(hWnd, &paint);
 		SetBkMode(hdc, TRANSPARENT);
+
 		TextOut(hdc, 10, 10, _T("Lembram-se disto?"), _tcslen(_T("Lembram-se disto?")));
 		aux = CreateCompatibleDC(hdc);
 		SelectObject(hdc, GetStockObject(BLACK_BRUSH));
 		SelectObject(hdc, GetStockObject(WHITE_PEN));
 		Rectangle(hdc, 200, 200, 300, 300);
-		//SelectObject(aux, bmp);
+		SelectObject(aux, bmp);
 
+
+		BitBlt(hdc, 0, 0, maxX, maxY, ddc, 0, 0, SRCCOPY);
 		
-		//TransparentBlt(hdc, x, 10, 134, 134, aux, 0, 0, 134, 134, RGB(255, 255, 255));
+		TransparentBlt(hdc, x, 10, 134, 134, aux, 0, 0, 134, 134, RGB(255, 255, 255));
+		//BitBlt(hdc, largura, altura, 134, 134, aux, 0, 0, SRCCOPY);
 
 		SelectObject(aux, bmp);
-		BitBlt(hdc, 700, 50, 134, 134, aux, 0, 0, SRCCOPY);
+		//BitBlt(hdc, largura/2, altura/2, 134, 134, aux, 0, 0, SRCCOPY);
 		
 		DeleteDC(aux);
 
-		EndPaint(hdc, &paint);
+		EndPaint(hWnd, &paint);
 		break;
 	case WM_DESTROY:
 		
 		DeleteObject(bmp);
 		PostQuitMessage(0);
 		break;
-
+	
 	case WM_CLOSE:	// Destruir a janela e terminar o programa 
 						// "PostQuitMessage(Exit Status)"	
 
@@ -352,7 +362,6 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 		//TextOut(hdc, 50, 50, &letra, 1);
 		//TextOut(hdc, 100, 100, texto, _tcslen(texto));
 		//ReleaseDC(hWnd, hdc);
-
 		DeleteDC(ddc);
 
 		if(MessageBox(hWnd, _T("Tem a certeza?"), _T("Titulo"), MB_YESNO) == IDYES)

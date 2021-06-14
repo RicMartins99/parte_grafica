@@ -33,6 +33,11 @@
 #define ID_ADICIONAR_AEROPORTO          40012
 #define ID_OP40015                      40015
 
+typedef struct merda{
+	HWND hWndaux;
+	int *x;
+}move;
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
